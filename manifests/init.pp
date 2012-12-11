@@ -65,6 +65,9 @@ class oracle::xe {
     "/etc/init.d/oracle-shm":
       mode => 0755,
       source => "puppet:///modules/oracle/oracle-shm";
+    "/sbin/chkconfig":
+      mode => 0755,
+      source => "puppet:///modules/oracle/chkconfig.sh";
     "/bin/awk":
       ensure => link,
       target => "/usr/bin/awk";
@@ -88,17 +91,17 @@ class oracle::xe {
       user => root;
     "configure xe":
       command => "/etc/init.d/oracle-xe configure responseFile=/tmp/xe.rsp >> /tmp/xe-install.log",
-      require => [Package["oracle-xe"],Exec["update-rc oracle-shm"]],
+      require => [Package["oracle-xe"],Exec["oracle-shm"]],
       user => root;
     "update-rc oracle-shm":
       command => "/usr/sbin/update-rc.d oracle-shm defaults 01 99",
       cwd => "/etc/init.d",
-      require => File["/etc/init.d/oracle-shm"],
+      require => [File["/etc/init.d/oracle-shm"],Package["oracle-xe"]],
       user => root;
     "oracle-shm":
       command => "/etc/init.d/oracle-shm start",
       user => root,
-      require => File["/etc/init.d/oracle-shm"];
+      require => Exec["update-rc oracle-shm"];
   }
 
   package {
