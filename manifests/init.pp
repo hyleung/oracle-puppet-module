@@ -92,6 +92,7 @@ class oracle::xe {
     "configure xe":
       command => "/etc/init.d/oracle-xe configure responseFile=/tmp/xe.rsp >> /tmp/xe-install.log",
       require => [Package["oracle-xe"],Exec["oracle-shm"]],
+      creates => "/u01/app/oracle/oradata",
       user => root;
     "update-rc oracle-shm":
       command => "/usr/sbin/update-rc.d oracle-shm defaults 01 99",
