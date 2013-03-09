@@ -76,19 +76,32 @@ class oracle::xe {
   }
 
   exec {
+    # unpack the rpm
     "unzip xe":
       alias => "unzip xe",
       command => "/usr/bin/unzip -o /tmp/oracle-xe-11.2.0-1.0.x86_64.rpm.zip",
       require => [Package["unzip"],File["/tmp/oracle-xe-11.2.0-1.0.x86_64.rpm.zip"]],
       cwd => "/tmp",
       user => root,
-      creates => "/tmp/oracle-xe-11.2.0-1.0.x86_64.rpm";
+      creates => "/tmp/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm";
+      # convert the RPM to a debian package
     "alien xe":
       command => "/usr/bin/alien --to-deb --scripts /tmp/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm",
-      cwd => "/tmp/Disk1",
+      cwd => "/tmp/Disk1",    
       require => Exec["unzip xe"],
       creates => "/tmp/Disk1/oracle-xe_11.2.0-2_amd64.deb",
       user => root;
+  }
+  # install the oracle pacakge
+  package {
+    "oracle-xe":
+      provider => "dpkg",
+      ensure => installed,
+      require => Exec["alien xe"],
+      source => "/tmp/Disk1/oracle-xe_11.2.0-2_amd64.deb";
+  }
+
+  exec {
     "configure xe":
       command => "/etc/init.d/oracle-xe configure responseFile=/tmp/xe.rsp >> /tmp/xe-install.log",
       require => [Package["oracle-xe"],Exec["oracle-shm"]],
@@ -98,18 +111,18 @@ class oracle::xe {
       command => "/usr/sbin/update-rc.d oracle-shm defaults 01 99",
       cwd => "/etc/init.d",
       require => [File["/etc/init.d/oracle-shm"],Package["oracle-xe"]],
-      user => root;
+      user => root,
+      onlyif => ["/usr/bin/test '/etc/rc*.d/*oracle-shm' -eq 0"];
     "oracle-shm":
       command => "/etc/init.d/oracle-shm start",
       user => root,
       require => Exec["update-rc oracle-shm"];
   }
 
-  package {
+  service {
     "oracle-xe":
-      provider => "dpkg",
-      ensure => latest,
-      require => Exec["alien xe"],
-      source => "/tmp/Disk1/oracle-xe_11.2.0-2_amd64.deb";
+      ensure => running,
+      require => Exec["configure xe"];
   }
+
 }
