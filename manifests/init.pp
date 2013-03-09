@@ -117,12 +117,11 @@ class oracle::xe {
       command => "/etc/init.d/oracle-shm start",
       user => root,
       require => Exec["update-rc oracle-shm"];
+    "oracle-xe":
+      command => "/etc/init.d/oracle-xe start",
+      user => root,
+      require => Exec["oracle-shm"];
   }
 
-  service {
-    "oracle-xe":
-      ensure => running,
-      require => Exec["configure xe"];
-  }
 
 }
