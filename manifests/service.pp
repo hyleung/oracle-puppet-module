@@ -1,0 +1,3 @@
+class oracle::service {
+
+}
