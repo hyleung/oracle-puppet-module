@@ -9,7 +9,7 @@ class oracle::install inherits oracle::params {
             source => "puppet:///modules/oracle/${rpm_file}.zip";
         "/files/xe.rsp":
             ensure => present,
-            source => "puppet:///modules/oracle/xe.rsp";
+            content => template("oracle/xe.rsp.erb");
         "/etc/init.d/oracle-shm":
             ensure => present,
             mode => 0755,
