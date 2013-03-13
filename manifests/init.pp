@@ -8,6 +8,8 @@ class oracle::server {
   package {
     "ntp":
       ensure => installed;
+    "bc":
+      ensure => installed;
     "htop":
       ensure => installed;
     "unzip":
@@ -32,7 +34,8 @@ class oracle::server {
     "ntp":
       ensure => stopped;
     "monit":
-      ensure => running;
+      ensure => running,
+      require => Package["monit"];
     "rsyslog":
       ensure => running;
     "procps":
