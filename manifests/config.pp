@@ -15,11 +15,12 @@ class oracle::config {
             command => "/etc/init.d/oracle-shm start",
             user => root,
             unless => "/usr/sbin/service oracle-shm status",
-            require => [Class["oracle::install"],Exec["update-rc oracle-shm"]]; 
-        "oracle-xe":
-            command => "/etc/init.d/oracle-xe start",
+            require => [Class["oracle::install"],Exec["update-rc oracle-shm"]];             
+        "update-rc oracle-xe":
+            command => "/usr/sbin/update-rc.d oracle-xe defaults",
+            cwd => "/etc/init.d",
             user => root,
-            unless => "/usr/sbin/service oracle-xe status",
-            require => [Exec["configure xe"],Exec["oracle-shm"]]; 
+            require => Class["oracle::install"],
+            unless => "/usr/sbin/update-rc.d -n oracle-xe defaults|grep 'already exist'";            
     }    
 }

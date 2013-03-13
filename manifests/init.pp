@@ -54,5 +54,5 @@ class oracle::server {
 
 class oracle::xe {
   require oracle::params
-  include oracle::install, oracle::config
+  include oracle::install, oracle::config, oracle::service
 }
