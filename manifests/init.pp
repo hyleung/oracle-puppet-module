@@ -32,7 +32,8 @@ class oracle::server {
 
   service {
     "ntp":
-      ensure => stopped;
+      ensure => stopped,
+      require => Package["ntp"];
     "monit":
       ensure => running,
       require => Package["monit"];
