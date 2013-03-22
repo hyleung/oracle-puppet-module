@@ -39,8 +39,6 @@ class oracle::server {
       require => Package["monit"];
     "rsyslog":
       ensure => running;
-    "procps":
-      ensure => running;
   }
 
 
