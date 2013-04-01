@@ -12,8 +12,6 @@ class oracle::server {
       ensure => installed;
     "htop":
       ensure => installed;
-    "unzip":
-      ensure => installed;
     "monit":
       ensure => installed;
     "rsyslog":
