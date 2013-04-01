@@ -38,7 +38,7 @@ class oracle::install inherits oracle::params {
         "alien xe":
             command => "/usr/bin/alien --to-deb --scripts /files/Disk1/${rpm_file}",
             cwd => "/files/Disk1",    
-            require => Exec["unzip xe"],
+            require => [Package["alien"],Exec["unzip xe"]],
             creates => "/files/Disk1/${deb_file}",
             user => root;
     }

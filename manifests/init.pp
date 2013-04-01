@@ -20,8 +20,6 @@ class oracle::server {
       ensure => installed;
     "curl":
       ensure => installed;
-    "alien":
-      ensure => installed;
     "libaio1":
       ensure => installed;
     "unixodbc":
@@ -56,5 +54,6 @@ class oracle::server {
 
 class oracle::xe {
   require oracle::params
+  include oracle::prereq
   include oracle::install, oracle::config, oracle::service
 }
