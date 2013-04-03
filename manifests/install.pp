@@ -49,11 +49,5 @@ class oracle::install inherits oracle::params {
             ensure => installed,
             require => Exec["alien xe"],
             source => "/files/Disk1/${deb_file}";
-    } ~> File["/etc/profile.d/set_oracle_env.sh"]
-
-    file {
-        "/etc/profile.d/set_oracle_env.sh":
-            ensure => present,
-            content => template("oracle/set_oracle_env.sh.erb");
-    }
+    } 
 }

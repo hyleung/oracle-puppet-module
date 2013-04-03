@@ -54,4 +54,6 @@ class oracle::xe {
   require oracle::params
   include oracle::prereq
   include oracle::install, oracle::config, oracle::service
+
+
 }
